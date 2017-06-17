@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="google-signin-client_id" content="AIzaSyAq9YpouZgH1pDNMpsppHF5N6kaRNYuneI">
+    <meta name="google-signin-cookiepolicy" content="udptest-4c355.appspot.com">
+    <meta name="google-signin-scope" content="mikael.quillet@gmail.com">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+  <script type="text/javascript">
+  
+  var ipcRenderer = require("electron").ipcRenderer;
+  
+
+    ipcRenderer.on('info' , function(event , data){ document.getElementById('messages').
+  insertAdjacentHTML('beforeend',
+    '<li class="friend-with-a-SVAGina"><div class="head"><span class="name">Юния</span><span class="time">10:15 AM, Today</span></div><div class="message">'+data+'</div></li>') });
+
+    
+  </script>
+  </head>
+  <body>
+    <div class="ui" >
+      <div id="close" ><img src="img/ic_close.svg" ></div>
+      <div id="maximize"><img src="img/ic_maximize.svg" ></div>
+      <div id="minimize"><img src="img/ic_remove.svg" ></div>
+      <div id="connect" ><img src="img/ic_phonelink.svg" ></div>
+
+    <div class="left-menu">
+        <form action="#" class="search">
+          <input placeholder="search..." type="search" name="" id="">
+          <input type="submit" value="&#xf002;">
+        </form>
+        <menu class="list-friends">
+          <li>
+            <img width="50" height="50" src="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg">
+            <div class="info">
+              <div class="user">Юния Гапонович</div>
+              <div class="status on"> online</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/1">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status on"> online</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/2">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status off">left 3 min age</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/3">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status on"> online</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/4">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status off">left 4 min age</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/5">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status off">left 12 min age</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/6">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status off">left 13 min age</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/7">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status on">online</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/8">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status off">left 6 min age</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/9">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status on">online</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/10">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status off">left 1 min age</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/0">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status on">online</div>
+            </div>
+          </li>
+          <li>
+            <img width="50" height="50" src="http://lorempixel.com/50/50/people/99">
+            <div class="info">
+              <div class="user">Name Fam</div>
+              <div class="status off">left 23 min age</div>
+            </div>
+          </li>
+        </menu>
+    </div>
+    <div class="chat">
+      <div class="top">
+        <div class="avatar">
+          <img width="50" height="50" src="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg">
+        </div>
+        <div class="info">
+          <div class="name">Юния Гапонович</div>
+          <div class="count">already 1 902 messages</div>
+        </div>
+      </div>
+      <ul class="messages" id="messages">
+        <li class="i">
+          <div class="head">
+            <span class="time">10:14 AM, Today</span>
+            <span class="name">Буль</span>
+          </div>
+          <div class="message">М не счастья..</div>
+        </li>
+        <li class="friend-with-a-SVAGina">
+          <div class="head">
+            <span class="name">Юния</span>
+            <span class="time">10:15 AM, Today</span>
+          </div>
+          <div class="message">чего тебе?</div>
+        </li>
+      </ul>
+      <div class="write-form">
+        <textarea placeholder="Type your message" name="e" id="texxt"  rows="2"></textarea>
+        <i class="fa fa-picture-o"></i>
+        <i class="fa fa-file-o"></i>
+        <span class="send">Send</span>
+      </div>
+    </div>
+    
+  </div>
+  <div id="myModal" class="modal" >
+
+  <!-- Modal content -->
+  <div class="modal-content">
+  <div class="fermer" ><img src="img/ic_close.svg" ></div>
+  <div id="logout"><img alt="Se déconnecter" src="img/ic_exit.svg"></div>
+  <h2 class="user">Connexion</h2>
+  <p class="user error"></p>
+  <br>
+    <form class="login-container" action="#" method="post">
+     <input type="email" placeholder="Email" Name="Email" required="" id="email">
+     <input type="password" placeholder="Password" Name="password" required="" id="password">
+     <input type="button" value="Se connecter" id="login" >
+     <input type="button" value="S'enregistrer" id="signIn">
+     <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  </form>
+
+  </div>
+</div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/nicescroll/3.5.4/jquery.nicescroll.js'></script>
+<script type="text/javascript" src="js/script.js"></script>
+        <script src="js/index.js"></script>
+  </body>
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+</html>
