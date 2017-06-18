@@ -67,6 +67,13 @@ body {
   z-index: 10;
   -webkit-app-region:no-drag;
 }
+.ui .connectstatus  {
+  top:30px;
+  right: 140px;
+  position: absolute;
+  z-index: 10;
+  -webkit-app-region:no-drag;
+}
 .ui .search input {
   outline: none;
   border: none;
@@ -164,7 +171,6 @@ body {
 }
 .ui .list-friends .status {
   position: relative;
-  margin-left: 14px;
   color: #a8adb3;
 }
 .ui .list-friends .off:after,

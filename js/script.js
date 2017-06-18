@@ -23,7 +23,6 @@ const BtnsignIn = document.getElementById('signIn');
 const txtError = document.getElementsByClassName('error');
 const BtnLogout = document.getElementById('logout');
 
-
 //Add login event
 BtnLogin.addEventListener('click', e => {
 	const email = txtEmail.value;
@@ -45,9 +44,12 @@ BtnsignIn.onclick = function() {
 firebase.auth().onAuthStateChanged(firebaseUser => {
 	if (firebaseUser) {
 		console.log("login ok, send to main..");
+		document.getElementById('statusOn').style.display = "block";
+		document.getElementById('statusOff').style.display = "none";
 		ipcRenderer.send('uid', firebaseUser.uid);
 	}else {
-		txtError.innerText = 'not logged in';
+		document.getElementById('statusOn').style.display = "none";
+		document.getElementById('statusOff').style.display = "block";
 	}
 });
 	/* ---#####################-----UI----###################-----*/

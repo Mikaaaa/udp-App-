@@ -13,7 +13,7 @@ const {ipcMain} = require("electron");
 const uid = null;
 
 function getUid() {
-  return uid;
+  return this.uid;
 }
 function setUid(puid) {
   this.uid =puid;
@@ -48,25 +48,30 @@ function createWindow () {
 ipcMain.on('uid', (event, arg) => {  
     // Print 1
     console.log("uid :"+ arg);
-    });
-server.on('message', (msg, rinfo) => {
-  mainWindow.webContents.send('info' ,msg.toString());
-  msg = '' + msg;
-  ipcMain.on('uid', (event, arg) => {  
     setUid(arg);
     });
-  if (msg.substring(0,4) == "png#") {
-    console.log('uid send');
-    var message = new Buffer('add#' + getUid());
-    
-    server.send(message, 0, message.length, 12000, rinfo.address, function(err, bytes) {
+server.on('message', (msg, rinfo) => {
+  msg = '' + msg;
+  switch(msg.substring(0,4)) {
+    case "png#" : 
+      var message = new Buffer('add#' + getUid());
+      server.send(message, 0, message.length, 12000, rinfo.address, function(err, bytes) {
         if (err) {
           console.log("ça a merdé : "+ err);
         }else {
-        console.log('UDP message sent to ' + rinfo.address +': 12000');
-      }
-        //server.close();
-    });
+        console.log('UDP message sent to ' + rinfo.address +': 12000 ; message : ' + message);
+          }
+            //server.close();
+        });break;
+      case "sms#" : 
+        var contact = msg.substring(4,msg.indexOf("+"));
+        var phone = msg.substring(msg.indexOf("+"),msg.indexOf("&"));
+        var tileContact = '<li><img width="50" height="50" src="http://lorempixel.com/50/50/people/2"><div class="info"><div class="user">'+contact+'</div><div class="status">'+phone+'</div></div></li>'
+        mainWindow.webContents.send('newContact' ,tileContact);
+        var content = msg.substring(msg.indexOf("&")+1,msg.length);
+        var smsContent = '<li class="friend-with-a-SVAGina"><div class="head"><span class="name">'+contact+' </span><span class="time">10:15 AM, Today</span></div><div class="message">'+content+'</div></li>';
+        mainWindow.webContents.send('newsms' ,smsContent);
+        break;
   }
   console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
 });
