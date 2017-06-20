@@ -10,17 +10,9 @@
     <meta name="google-signin-scope" content="mikael.quillet@gmail.com">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
-  <script type="text/javascript">
   
-  var ipcRenderer = require("electron").ipcRenderer;
-  
-
-    ipcRenderer.on('newContact' , function(event , data){ document.getElementById('contacts').insertAdjacentHTML('afterbegin',data)});
-    ipcRenderer.on('newsms' , function(event , data){ document.getElementById('messages').insertAdjacentHTML('beforeend',data) });
-    
-  </script>
   </head>
-  <body>
+  <body >
     <div class="ui" >
       <div id="close" ><img src="img/ic_close.svg" ></div>
       <div id="maximize"><img src="img/ic_maximize.svg" ></div>
@@ -30,45 +22,23 @@
 
     <div class="left-menu">
         <form action="#" class="search">
-          <input placeholder="search..." type="search" name="" id="">
+          <input placeholder="search..." type="search" name="" id="TxtSearch">
           <input type="submit" value="&#xf002;">
         </form>
-        <menu class="list-friends" id="contacts">
-          <li>
-            <img width="50" height="50" src="img/BenderEstLeMeilleur.png">
-            <div class="info">
-              <div class="user">Rick</div>
-              <div class="status">c'est a la mode dans le futur</div>
-            </div>
-          </li>
-          
+        <menu class="list-friends" id="contacts">          
         </menu>
     </div>
     <div class="chat">
       <div class="top">
         <div class="avatar">
-          <img width="50" height="50" src="img/BenderEstLeMeilleur.png">
+          <img width="50" height="50" id="Top-img" src="">
         </div>
         <div class="info">
-          <div class="name">Bender</div>
-          <div class="count">10110111011101110011001</div>
+          <div class="name" id="Top-name">Netw</div>
+          <div class="count" id="Top-phone">L'application qui te veux du bien</div>
         </div>
       </div>
       <ul class="messages" id="messages">
-        <li class="i">
-          <div class="head">
-            <span class="time">10:14 AM, Today</span>
-            <span class="name">Moi</span>
-          </div>
-          <div class="message">C'est quoi cette photo de profil ???</div>
-        </li>
-        <li class="friend-with-a-SVAGina">
-          <div class="head">
-            <span class="name">Bender</span>
-            <span class="time">10:15 AM, Today</span>
-          </div>
-          <div class="message">c'est a la mode dans le futur, en plus des milliard d'au trucs que t'a même pas idée que ça existe </div>
-        </li>
       </ul>
       <div class="write-form">
         <textarea placeholder="Type your message" name="e" id="texxt"  rows="2"></textarea>

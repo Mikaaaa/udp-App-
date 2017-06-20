@@ -9,8 +9,10 @@ const url = require('url')
 const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
 const {ipcMain} = require("electron");
+const electron_data = require('electron-data');
 
 const uid = null;
+
 
 function getUid() {
   return this.uid;
@@ -23,8 +25,14 @@ function setUid(puid) {
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
+electron_data.config({
+  filename : 'dataUser',
+  path : app.getPath('userData'),
+  autosave :true
+});
 
 function createWindow () {
+
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 1366, height: 720, frame:false})
   // First, initialize the JavaScript SDK
@@ -59,6 +67,10 @@ server.on('message', (msg, rinfo) => {
         if (err) {
           console.log("ça a merdé : "+ err);
         }else {
+          electron_data.set('ipSync', {'ip': rinfo.address})
+          .then(data => {
+          console.log(data); // {'awesome': 'module'}
+          }); 
         console.log('UDP message sent to ' + rinfo.address +': 12000 ; message : ' + message);
           }
             //server.close();
@@ -66,11 +78,9 @@ server.on('message', (msg, rinfo) => {
       case "sms#" : 
         var contact = msg.substring(4,msg.indexOf("+"));
         var phone = msg.substring(msg.indexOf("+"),msg.indexOf("&"));
-        var tileContact = '<li><img width="50" height="50" src="http://lorempixel.com/50/50/people/2"><div class="info"><div class="user">'+contact+'</div><div class="status">'+phone+'</div></div></li>'
-        mainWindow.webContents.send('newContact' ,tileContact);
-        var content = msg.substring(msg.indexOf("&")+1,msg.length);
-        var smsContent = '<li class="friend-with-a-SVAGina"><div class="head"><span class="name">'+contact+' </span><span class="time">10:15 AM, Today</span></div><div class="message">'+content+'</div></li>';
-        mainWindow.webContents.send('newsms' ,smsContent);
+        var smscontent = msg.substring(msg.indexOf("&")+1,msg.length);
+        var Contact = { id : phone , name : contact, img: "", content : smscontent };
+        mainWindow.webContents.send('newsms' , Contact);
         break;
   }
   console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
@@ -116,7 +126,6 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

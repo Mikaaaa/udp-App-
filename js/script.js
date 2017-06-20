@@ -1,9 +1,81 @@
+var DtBender = new Date(3017,05,19);
+var dt = new Date();
+var dtoptions = {weekday: "long", year: "numeric", month: "long", day: "numeric"};
+var BenderMsg = {id:'1001011110101', date: DtBender.toLocaleDateString('fr-FR', dtoptions) , who: "friend-with-a-SVAGina" , content :"t'es en avance gros naze, repasse plus tard"};
+var Bender = {id:'1001011110101', name : 'Bender', img : "img/benderEstLeMeilleur.png", content :'looool'};
+var TabMessages = [BenderMsg];
+var TabContacts = [Bender];
+
+function idExist(id) {	
+	var response = false;
+	for (var i in TabContacts) {		
+		if (TabContacts[i].id == id) {response = true}
+	}
+	return response;
+}
+function getImgUrlById(id) {
+	try {
+	if(TabContacts[id].img == "") { 
+		return 'img/ltrs/'+TabContacts[id].name.substring(0,1).toLowerCase()+'.png';} else { return TabContacts[id].img;}
+	}
+	catch(e) {
+		//console.log(e);
+	}
+}
+document.body.onload = function() {
+	document.getElementById('Top-img').setAttribute('src', "https://mika.unrozah.fr/app/img/");
+	for (var i in TabContacts) {
+		var txtId = "'"+TabContacts[i].id+"'";
+		document.getElementById('contacts').insertAdjacentHTML('afterbegin','<li id="tileContact" onclick="loadContactTop('+txtId+')"><img width="50" height="50" src="'+getImgUrlById(i)+'"><div class="info"><p class="phone">'+TabContacts[i].id+'</p><div class="user">'+TabContacts[i].name+'</div><div class="status">'+TabContacts[i].content.substring(0,Math.min(30,TabContacts[i].content.length))+'</div></div></li>');
+	}
+}
+function listContacts() {
+	document.getElementById('contacts').innerHTML ="";
+	for (var i in TabContacts) {
+		var txtId = "'"+TabContacts[i].id+"'";	
+		document.getElementById('contacts').insertAdjacentHTML('afterbegin','<li id="tileContact" onclick="loadContactTop('+txtId+')"><img width="50" height="50" src="'+getImgUrlById(i)+'"><div class="info"><p class="phone">'+TabContacts[i].id+'</p><div class="user">'+TabContacts[i].name+'</div><div class="status">'+TabContacts[i].content.substring(0,Math.min(30,TabContacts[i].content.length))+'</div></div></li>');
+	}
+}
+function isContactView(phone) {
+	return (document.getElementById('Top-phone').innerHTML == phone);
+}
+function nbrMessagesById(id) {
+	cpt = 0;
+	for (var i in TabContacts) {		
+		if (TabContacts[i].id == id) {cpt++;}
+	}
+	return cpt;
+}
+function getNameById(phone) {
+	for (var i in TabContacts) {
+		if (TabContacts[i].id == phone) { return TabContacts[i].name }
+		
+	}
+}
+function loadContactTop(phone) {
+	document.getElementById('Top-name').innerText = "";
+	document.getElementById('Top-name').innerText = getNameById(phone);
+	document.getElementById('Top-phone').innerText = "";
+	document.getElementById('Top-phone').innerText = phone;
+	document.getElementById('messages').innerHTML = "";
+	
+	for (var i in TabMessages) {
+		if (TabMessages[i].id == phone) {
+			if (getImgUrlById(i)) {
+				document.getElementById('Top-img').setAttribute("src", "");
+				document.getElementById('Top-img').setAttribute("src",getImgUrlById(i));
+			}
+			document.getElementById('messages').insertAdjacentHTML('beforeend','<li class="'+TabMessages[i].who+'"><div class="head"><span class="name"></span><span class="time">'+TabMessages[i].date+'</span></div><div class="message">'+TabMessages[i].content+'</div></li>');
+		}
+	}
+}
 (function() {
 	
 
 const { remote } = require('electron');
 const {ipcRenderer} = require('electron');
 var win = remote.getCurrentWindow();
+
 
 // Initialize Firebase
   var config = {
@@ -57,6 +129,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 var close = document.getElementById('close');
 var minimize = document.getElementById('minimize');
 var maximize = document.getElementById('maximize');
+var txtSearch = document.getElementById('TxtSearch');
 
 close.addEventListener('click', function() {
 	win.close();
@@ -67,7 +140,31 @@ minimize.addEventListener('click', function() {
 maximize.addEventListener('click', function() {
 	win.isMaximized() ? win.unmaximize() : win.maximize();
 });
+/*	
+txtSearch.onchange = function() {
+	return TabContacts.filter((el) =>
+    el.toLowerCase().indexOf(txtSearch.innerText.toLowerCase()) > -1
+  );
+	txtSearch.innerText;
+}*/
+/* ---#####################---reception--sms-----###################-----*/
 
+
+ipcRenderer.on('newsms' , function(event , data){ 
+	//si le numéro existe déjà dans la tableau des contacts
+	if(!idExist(data.id)) {TabContacts.push(data)}
+	//charge les contacts
+	listContacts();
+	var dtSms = new Date();
+	//si on est déjà sur le contact
+	if (isContactView(data.id)) {
+		TabMessages.push({id: data.id ,date : dtSms.toLocaleDateString("fr-FR", dtoptions), who: "friend-with-a-SVAGina",content : data.content});
+		document.getElementById('messages').insertAdjacentHTML('beforeend','<li class="friend-with-a-SVAGina"><div class="head"><span class="name"></span><span class="time">'+dtSms.toLocaleDateString("fr-FR",dtoptions)+'</span></div><div class="message">'+data.content+'</div></li>');
+	} else {
+		TabMessages.push({id: data.id ,date : dtSms.toLocaleDateString("fr-FR", dtoptions),who: "friend-with-a-SVAGina", content : data.content});
+	}
+
+});
 
 /*---#####################----modal----##############################----*/
 // Get the modal
