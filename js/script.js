@@ -1,8 +1,8 @@
 var DtBender = new Date(3017,05,19);
 var dt = new Date();
 var dtoptions = {weekday: "long", year: "numeric", month: "long", day: "numeric"};
-var BenderMsg = {id:'1001011110101', date: DtBender.toLocaleDateString('fr-FR', dtoptions) , who: "friend-with-a-SVAGina" , content :"t'es en avance gros naze, repasse plus tard"};
-var Bender = {id:'1001011110101', name : 'Bender', img : "img/benderEstLeMeilleur.png", content :'looool'};
+var BenderMsg = {id:'1001011110101', date: DtBender.toLocaleDateString('fr-FR', dtoptions) , who: "friend-with-a-SVAGina" , content :"Tous ceux qui n'utilise pas ce truc, sont des gros naze"};
+var Bender = {id:'1001011110101', name : 'Bender', tag:"tileContact", img : "img/benderEstLeMeilleur.png", content :'looool'};
 var TabMessages = [BenderMsg];
 var TabContacts = [Bender];
 
@@ -23,17 +23,22 @@ function getImgUrlById(id) {
 	}
 }
 document.body.onload = function() {
-	document.getElementById('Top-img').setAttribute('src', "https://mika.unrozah.fr/app/img/");
+	document.getElementById('Top-img').setAttribute('src', "img/benderEstLeMeilleur.png");
 	for (var i in TabContacts) {
 		var txtId = "'"+TabContacts[i].id+"'";
-		document.getElementById('contacts').insertAdjacentHTML('afterbegin','<li id="tileContact" onclick="loadContactTop('+txtId+')"><img width="50" height="50" src="'+getImgUrlById(i)+'"><div class="info"><p class="phone">'+TabContacts[i].id+'</p><div class="user">'+TabContacts[i].name+'</div><div class="status">'+TabContacts[i].content.substring(0,Math.min(30,TabContacts[i].content.length))+'</div></div></li>');
+		document.getElementById('contacts').insertAdjacentHTML('afterbegin','<li id="'+TabContacts[i].tag+'" onclick="loadContactTop('+txtId+')"><img width="50" height="50" src="'+getImgUrlById(i)+'"><div class="info"><p class="phone">'+TabContacts[i].id+'</p><div class="user">'+TabContacts[i].name+'</div><div class="status">'+TabContacts[i].content.substring(0,Math.min(30,TabContacts[i].content.length))+'</div></div></li>');
+	}
+	for (var i in TabMessages) {
+		if (TabMessages[i].id == "1001011110101") {
+			document.getElementById('messages').insertAdjacentHTML('beforeend','<li class="'+TabMessages[i].who+'"><div class="head"><span class="name"></span><span class="time">'+TabMessages[i].date+'</span></div><div class="message">'+TabMessages[i].content+'</div></li>');
+		}
 	}
 }
-function listContacts() {
+function listContacts(id) {
 	document.getElementById('contacts').innerHTML ="";
 	for (var i in TabContacts) {
 		var txtId = "'"+TabContacts[i].id+"'";	
-		document.getElementById('contacts').insertAdjacentHTML('afterbegin','<li id="tileContact" onclick="loadContactTop('+txtId+')"><img width="50" height="50" src="'+getImgUrlById(i)+'"><div class="info"><p class="phone">'+TabContacts[i].id+'</p><div class="user">'+TabContacts[i].name+'</div><div class="status">'+TabContacts[i].content.substring(0,Math.min(30,TabContacts[i].content.length))+'</div></div></li>');
+		document.getElementById('contacts').insertAdjacentHTML('afterbegin','<li id="'+TabContacts[i].tag+'" onclick="loadContactTop('+txtId+')"><img width="50" height="50" src="'+getImgUrlById(i)+'"><div class="info"><div class="user">'+TabContacts[i].name+'</div><div class="status">'+TabContacts[i].content.substring(0,Math.min(30,TabContacts[i].content.length))+'</div></div></li>');
 	}
 }
 function isContactView(phone) {
@@ -52,19 +57,21 @@ function getNameById(phone) {
 		
 	}
 }
+function getPosById(phone) {
+	for (var i =0; i<= TabContacts.length;i++) {		
+		if (TabContacts[i].id == phone) {return i}
+	}
+}
 function loadContactTop(phone) {
 	document.getElementById('Top-name').innerText = "";
 	document.getElementById('Top-name').innerText = getNameById(phone);
 	document.getElementById('Top-phone').innerText = "";
 	document.getElementById('Top-phone').innerText = phone;
 	document.getElementById('messages').innerHTML = "";
-	
+	document.getElementById('Top-img').setAttribute("src", "");
+	document.getElementById('Top-img').setAttribute("src",getImgUrlById(getPosById(phone)));	
 	for (var i in TabMessages) {
 		if (TabMessages[i].id == phone) {
-			if (getImgUrlById(i)) {
-				document.getElementById('Top-img').setAttribute("src", "");
-				document.getElementById('Top-img').setAttribute("src",getImgUrlById(i));
-			}
 			document.getElementById('messages').insertAdjacentHTML('beforeend','<li class="'+TabMessages[i].who+'"><div class="head"><span class="name"></span><span class="time">'+TabMessages[i].date+'</span></div><div class="message">'+TabMessages[i].content+'</div></li>');
 		}
 	}
@@ -152,9 +159,14 @@ txtSearch.onchange = function() {
 
 ipcRenderer.on('newsms' , function(event , data){ 
 	//si le numéro existe déjà dans la tableau des contacts
-	if(!idExist(data.id)) {TabContacts.push(data)}
-	//charge les contacts
-	listContacts();
+	if(!idExist(data.id)) 
+		{TabContacts.push(data)} 
+	else {
+		TabContact = TabContacts[getPosById(data.id)];
+		TabContacts.splice(getPosById(data.id),1);
+		TabContacts.splice(TabContacts.length,0,TabContact);
+	}
+	TabContacts[getPosById(data.id)].content = data.content;
 	var dtSms = new Date();
 	//si on est déjà sur le contact
 	if (isContactView(data.id)) {
@@ -163,6 +175,8 @@ ipcRenderer.on('newsms' , function(event , data){
 	} else {
 		TabMessages.push({id: data.id ,date : dtSms.toLocaleDateString("fr-FR", dtoptions),who: "friend-with-a-SVAGina", content : data.content});
 	}
+	//charge les contacts
+	listContacts(data.id);
 
 });
 

@@ -79,7 +79,7 @@ server.on('message', (msg, rinfo) => {
         var contact = msg.substring(4,msg.indexOf("+"));
         var phone = msg.substring(msg.indexOf("+"),msg.indexOf("&"));
         var smscontent = msg.substring(msg.indexOf("&")+1,msg.length);
-        var Contact = { id : phone , name : contact, img: "", content : smscontent };
+        var Contact = { id : phone , name : contact, tag:"tileContact", img: "", content : smscontent };
         mainWindow.webContents.send('newsms' , Contact);
         break;
   }
